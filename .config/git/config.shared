@@ -84,3 +84,6 @@
 [init]
 	defaultBranch = master
 	templatedir = ~/.config/git/templates
+[user]
+   	email = dominic@dominic.io
+   	name = Dominic Karvik
