@@ -18,3 +18,4 @@ clj-kondo
 cljfmt
 impala
 zprint
+maki
