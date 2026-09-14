@@ -1,5 +1,4 @@
 local CODEX_BASE = "https://chatgpt.com/backend-api/codex"
-local CODEX_USAGE_URL = "https://chatgpt.com/backend-api/wham/usage"
 local CODEX_RESET_CREDITS_URL = "https://chatgpt.com/backend-api/wham/rate-limit-reset-credits"
 
 local function credentials()
@@ -60,42 +59,26 @@ local function request(path, body, timeout)
   return response.body
 end
 
-local function show_modal(title, lines)
+local function show_modal(title, lines, footer)
   local buffer = maki.ui.buf()
   for _, line in ipairs(lines) do buffer:line(line) end
   local window = maki.ui.open_win(buffer, {
     title = title,
     width = "70%",
     height = math.min(#lines + 2, 20),
-    footer = { { "Any key", "close" } },
+    footer = footer or { { "Any key", "close" } },
   })
+  local key
   while true do
     local event = window:recv()
     if not event or event.type == "close" then break end
-    if event.type == "key" and event.key ~= "enter" then break end
+    if event.type == "key" then
+      key = event.key
+      break
+    end
   end
   window:close()
-end
-
-local function codex_usage()
-  local auth, auth_err = credentials()
-  if not auth then return nil, auth_err end
-  local response, err = maki.net.request(CODEX_USAGE_URL, {
-    headers = {
-      ["Authorization"] = "Bearer " .. auth.access,
-      ["chatgpt-account-id"] = auth.account_id,
-      ["accept"] = "application/json",
-      ["originator"] = "codex_cli_rs",
-      ["User-Agent"] = "codex_cli_rs/0.0.0 (maki)",
-    },
-  })
-  if not response then return nil, err end
-  if response.status < 200 or response.status >= 300 then
-    return nil, "Codex usage request failed (HTTP " .. response.status .. "): " .. response.body
-  end
-  local usage, decode_err = maki.json.decode(response.body)
-  if not usage then return nil, "could not parse Codex usage response: " .. decode_err end
-  return usage
+  return key
 end
 
 local function reset_credits()
@@ -193,77 +176,78 @@ local function default_model()
   return first and (first.slug or first.id or first.model) or "gpt-5.5"
 end
 
-maki.api.register_command({
-  name = "codex-usage",
-  description = "Show Codex subscription limits, reset times, and available usage-limit resets.",
-  handler = function()
-    local usage, err = codex_usage()
-    if not usage then
-      maki.ui.flash("Could not load Codex usage: " .. err)
-      return
-    end
-    local lines = { "Codex usage" }
-    if usage.plan_type then lines[#lines + 1] = "Plan: " .. usage.plan_type end
-    local function time_until(timestamp)
-      return maki.ui.humantime(math.max(0, timestamp - os.time()))
-    end
-    local function add_window(label, window)
-      if not window or window.used_percent == nil then return end
-      local line = label .. ": " .. tostring(window.used_percent) .. "% used"
-      if window.limit_window_seconds then line = line .. " / " .. math.ceil(window.limit_window_seconds / 60) .. " min" end
-      if window.reset_at then line = line .. " / resets in " .. time_until(window.reset_at) .. " at " .. os.date("%Y-%m-%d %H:%M:%S %Z", window.reset_at) end
-      lines[#lines + 1] = line
-    end
-    add_window("Primary limit", (usage.rate_limit or {}).primary_window)
-    add_window("Secondary limit", (usage.rate_limit or {}).secondary_window)
-    for _, item in ipairs(usage.additional_rate_limits or {}) do
-      local limit = item.rate_limit or {}
-      local label = item.limit_name or item.metered_feature or "Additional limit"
-      add_window(label .. " primary", limit.primary_window)
-      add_window(label .. " secondary", limit.secondary_window)
-    end
-    local resets = usage.rate_limit_reset_credits or {}
-    if resets.available_count ~= nil then lines[#lines + 1] = "Usage limit resets: " .. tostring(resets.available_count) .. " available" end
-    if #lines == 1 then lines[#lines + 1] = "No displayable usage limits returned." end
-    show_modal("Codex usage", lines)
-  end,
-})
+local function iso_to_epoch(value)
+  local year, month, day, hour, min, sec = value:match("^(%d%d%d%d)%-(%d%d)%-(%d%d)[T ](%d%d):(%d%d):?(%d*)")
+  if not year then return nil end
+  local t = {
+    year = tonumber(year),
+    month = tonumber(month),
+    day = tonumber(day),
+    hour = tonumber(hour),
+    min = tonumber(min),
+    sec = tonumber(sec) or 0,
+  }
+  local utc_offset = os.difftime(os.time(), os.time(os.date("!*t")))
+  return os.time(t) - utc_offset
+end
+
+local function pretty_expiry(value)
+  local timestamp = tonumber(value)
+  if not timestamp or timestamp < 100000 then
+    timestamp = iso_to_epoch(value)
+  end
+  if not timestamp then return tostring(value) end
+  local remaining = timestamp - os.time()
+  local date = os.date("%b %d %H:%M", timestamp)
+  if remaining < 0 then return "expired (" .. date .. ")" end
+  return "in " .. maki.ui.humantime(remaining) .. " (" .. date .. ")"
+end
 
 maki.api.register_command({
-  name = "codex-redeem-reset",
-  description = "Choose and confirm redemption of an available Codex usage-limit reset.",
+  name = "codex-reset",
+  description = "Show available Codex usage-limit resets; press y to use one.",
   handler = function()
     local credits, err = reset_credits()
     if not credits then
       maki.ui.flash("Could not load Codex reset credits: " .. err)
       return
     end
-    local options = {}
+    local available = {}
     for _, credit in ipairs(credits.credits or {}) do
       if credit.status == "available" and credit.reset_type == "codex_rate_limits" and credit.id then
-        local detail = credit.description or "Reset current Codex usage limits."
-        if credit.expires_at then detail = detail .. " Expires " .. credit.expires_at .. "." end
-        options[#options + 1] = { label = credit.title or "Full reset", detail = detail, credit_id = credit.id }
+        available[#available + 1] = credit
       end
     end
-    if #options == 0 then
-      maki.ui.flash("No Codex usage-limit resets are available.")
-      return
+    table.sort(available, function(a, b)
+      local ea = iso_to_epoch(a.expires_at or "") or 0
+      local eb = iso_to_epoch(b.expires_at or "") or 0
+      return ea < eb
+    end)
+    local lines = { "Codex resets: " .. tostring(credits.available_count or #available) .. " available" }
+    if #available == 0 then
+      lines[#lines + 1] = "Press any key to close."
+    else
+      local last_key
+      for _, credit in ipairs(available) do
+        local key = (credit.title or "Full reset") .. "\n" .. (credit.description or "")
+        if key ~= last_key then
+          last_key = key
+          lines[#lines + 1] = credit.title or "Full reset"
+          if credit.description then lines[#lines + 1] = credit.description end
+        end
+        lines[#lines + 1] = "- expires " .. (pretty_expiry(credit.expires_at) or tostring(credit.expires_at))
+      end
     end
-    local ListPicker = require("maki.list_picker")
-    local choice = ListPicker.open(options, { title = "Redeem Codex usage-limit reset", footer = { { "Enter", "select" }, { "Esc", "cancel" } } })
-    if choice.type ~= "choice" then return end
-    local selected = options[choice.index]
-    local confirmation = ListPicker.open({ { label = "Redeem " .. selected.label, detail = "This consumes one reset and resets your current Codex usage limits." } }, { title = "Confirm reset redemption", footer = { { "Enter", "redeem" }, { "Esc", "cancel" } } })
-    if confirmation.type ~= "choice" then return end
-    local outcome, consume_err = consume_reset(selected.credit_id)
+    local key = show_modal("Codex resets", lines, { { "y", "use next-expiring reset" }, { "Any key", "close" } })
+    if key ~= "y" or #available == 0 then return end
+    local outcome, consume_err = consume_reset(available[1].id)
     if not outcome then
       maki.ui.flash("Could not redeem Codex reset: " .. consume_err)
       return
     end
     local message = outcome.code == "reset" and "Codex usage limits reset." or outcome.code == "already_redeemed" and "This Codex reset was already redeemed." or outcome.code == "nothing_to_reset" and "Codex usage does not need a reset." or "No Codex reset was redeemed."
     if outcome.windows_reset ~= nil then message = message .. " Windows reset: " .. tostring(outcome.windows_reset) .. "." end
-    show_modal("Codex reset redemption", { message })
+    maki.ui.flash(message)
   end,
 })
 
