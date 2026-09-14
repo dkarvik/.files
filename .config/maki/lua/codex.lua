@@ -14,6 +14,27 @@ local function credentials()
   return auth
 end
 
+local function describe_http_error(status, body)
+  local decoded = maki.json.decode(body or "")
+  local err = decoded and decoded.error
+  if err and err.type == "usage_limit_reached" then
+    local parts = { "Codex usage limit reached" }
+    if err.resets_in_seconds then
+      parts[#parts + 1] = "resets in " .. maki.ui.humantime(err.resets_in_seconds)
+    end
+    if err.resets_at then
+      parts[#parts + 1] = "at " .. os.date("%Y-%m-%d %H:%M:%S %Z", err.resets_at)
+    end
+    parts[#parts + 1] = "check /usage or redeem a reset with /codex-reset"
+    return table.concat(parts, "; ")
+  end
+  if err and err.message then
+    local kind = err.type and (err.type .. ": ") or ""
+    return "Codex request failed (HTTP " .. status .. "): " .. kind .. err.message
+  end
+  return "Codex request failed (HTTP " .. status .. ")"
+end
+
 local function request(path, body, timeout)
   local auth, auth_err = credentials()
   if not auth then return nil, auth_err end
@@ -34,7 +55,7 @@ local function request(path, body, timeout)
   })
   if not response then return nil, err end
   if response.status < 200 or response.status >= 300 then
-    return nil, "Codex request failed (HTTP " .. response.status .. "): " .. response.body
+    return nil, describe_http_error(response.status, response.body)
   end
   return response.body
 end
@@ -91,7 +112,7 @@ local function reset_credits()
   })
   if not response then return nil, err end
   if response.status < 200 or response.status >= 300 then
-    return nil, "Codex reset request failed (HTTP " .. response.status .. "): " .. response.body
+    return nil, describe_http_error(response.status, response.body)
   end
   local credits, decode_err = maki.json.decode(response.body)
   if not credits then return nil, "could not parse Codex reset credits response: " .. decode_err end
@@ -126,7 +147,7 @@ local function consume_reset(credit_id)
   })
   if not response then return nil, err end
   if response.status < 200 or response.status >= 300 then
-    return nil, "Codex reset failed (HTTP " .. response.status .. "): " .. response.body
+    return nil, describe_http_error(response.status, response.body)
   end
   local outcome, decode_err = maki.json.decode(response.body)
   if not outcome then return nil, "could not parse Codex reset response: " .. decode_err end
