@@ -1,3 +1,4 @@
+local librarian_ok, librarian = pcall(require, "librarian.init")
 local CODEX_BASE = "https://chatgpt.com/backend-api/codex"
 local CODEX_RESET_CREDITS_URL = "https://chatgpt.com/backend-api/wham/rate-limit-reset-credits"
 
@@ -250,6 +251,8 @@ maki.api.register_command({
     maki.ui.flash(message)
   end,
 })
+
+if librarian_ok then librarian.register_extension("codex_search") end
 
 maki.api.register_tool({
   name = "codex_search",
