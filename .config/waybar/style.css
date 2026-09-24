@@ -1,3 +1,7 @@
+* {
+    font-family: Roboto, Helvetica, Arial, sans-serif, 'Symbols Nerd Font';
+}
+
 window#waybar {
     background: rgba(0,0,0,0);
     color: #ffffff;

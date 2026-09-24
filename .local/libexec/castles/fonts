@@ -13,6 +13,18 @@ mktemp_tracked() {
     echo "$tmp"
 }
 
+fontdl() {
+    local fontdir="$(fontdir "$1-$2")"
+    if [ ! -d "$fontdir" ]; then
+        output="$(mktemp_tracked).tmp"
+        curl --progress-bar -L --output "$output" "$3"
+        oldfiles="$(ls -d "$(fontdir)/$1-"* 2>/dev/null)"
+        mkdir -p "$fontdir"
+        unzip -d "$fontdir" "$output"
+        [ -n "$oldfiles" ] && rm -rf "$oldfiles"
+    fi
+}
+
 jb_dir="$(fontdir "jetbrainsmono-2.304")"
 if [ ! -d "$jb_dir" ]; then
     output="$(mktemp_tracked).tmp"
@@ -23,16 +35,9 @@ if [ ! -d "$jb_dir" ]; then
     [ -n "$oldfiles" ] && rm -rf "$oldfiles"
 fi
 
-maple_dir="$(fontdir "maplemono-7.9")"
-
-if [ ! -d "$maple_dir" ]; then
-    output="$(mktemp_tracked).tmp"
-    curl --progress-bar -L --output "$output" "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-NF-unhinted.zip"
-    oldfiles="$(ls -d "$(fontdir)"/maplemono* 2>/dev/null)"
-    mkdir -p "$maple_dir"
-    unzip -d "$maple_dir" "$output" -x LICENSE.txt config.json
-    [ -n "$oldfiles" ] && rm -rf "$oldfiles"
-fi
+fontdl "maplemonoNF" "7.9" "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-NF-unhinted.zip"
+fontdl "maplemono" "7.9" "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-TTF.zip"
+fontdl "nf-symbols" "3.5.1" "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/NerdFontsSymbolsOnly.zip"
 
 if [ "linux" = "$ostype" ]; then
     fc-cache -f
