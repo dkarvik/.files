@@ -19,6 +19,29 @@ window > box > * > widget > box, window > box > * > widget > label {
 .modules-left > widget > *, .modules-center > widget > *, .modules-right> widget > * {
     padding: 0 20px;
 }
+
+/* Groups of widgets: group/xxx */
+widget > box > widget > * {
+    padding-left: 10px;
+    margin-right: 11px; /* padding + border, no box-sizing */
+}
+
+widget > box > widget:first-child > * {
+    padding-left: 0;
+}
+
+widget > box > widget {
+    border-right: 1px solid #383838;
+}
+
+widget > box > widget:last-child {
+    border-right: 0;
+}
+
+widget > box > widget:last-child > * {
+    margin-right: 0;
+}
+
 #workspaces button { color: inherit; } /* otherwise workspaces is a default dull grey colour */
 #workspaces button.focused > *, #workspaces button.active > * { background: #010101; }
 
