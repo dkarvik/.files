@@ -44,6 +44,8 @@ widget > box > widget:last-child > * {
 
 #workspaces button { color: inherit; } /* otherwise workspaces is a default dull grey colour */
 #workspaces button.focused > *, #workspaces button.active > * { background: #010101; }
+#workspaces > button { border-right: 1px solid #383838; }
+#workspaces > button:last-child { border-right: 0; }
 
 /* move workspace padding so coloured background is wider */
 #workspaces button { padding: 0; }
