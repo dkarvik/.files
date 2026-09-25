@@ -24,19 +24,19 @@
     },
     "pulseaudio": {
         "format": "{icon}  {volume}% {format_source}",
-        "format-bluetooth": "{volume}% {icon} {format_source}",
-        "format-bluetooth-muted": " {icon} {format_source}",
-        "format-muted": " {format_source}",
-        "format-source": "   {volume}%",
-        "format-source-muted": "",
+        "format-bluetooth": "{volume}% {icon}<span font_family='Font Awesome 6 Brands'></span> {format_source}",
+        "format-bluetooth-muted": "<span font_family='Font Awesome 6 Free'></span> {icon}<span font_family='Font Awesome 6 Brands'></span> {format_source}",
+        "format-muted": "<span font_family='Font Awesome 6 Free'></span> {format_source}",
+        "format-source": "  <span font_family='Font Awesome 6 Free'></span> {volume}%",
+        "format-source-muted": "<span font_family='Font Awesome 6 Free'></span>",
         "format-icons": {
-            "headphone": "",
-            "hands-free": "",
-            "headset": "",
-            "phone": "",
-            "portable": "",
-            "car": "",
-            "default": ["", "", ""]
+            "headphone": "<span font_family='Font Awesome 6 Free'></span>",
+            "hands-free": "<span font_family='Font Awesome 6 Free'></span>",
+            "headset": "<span font_family='Font Awesome 6 Free'></span>",
+            "phone": "<span font_family='Font Awesome 6 Free'></span>",
+            "portable": "<span font_family='Font Awesome 6 Free'></span>",
+            "car": "<span font_family='Font Awesome 6 Free'></span>",
+            "default": ["<span font_family='Font Awesome 6 Free'></span>", "<span font_family='Font Awesome 6 Free'></span>", "<span font_family='Font Awesome 6 Free'></span>"]
         },
         "on-click": "pavucontrol",
         "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
@@ -44,16 +44,16 @@
         "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -2%"
     },
     "network": {
-        "format-wifi": "{essid} ({signalStrength}%) ",
+        "format-wifi": "{essid} ({signalStrength}%) <span font_family='Font Awesome 6 Free'></span>",
         "tooltip-format-wifi": "{frequency}GHz {bandwidthUpBytes}/{bandwidthDownBytes}",
-        "format-ethernet": "{ifname}: {ipaddr} ",
-        "format-linked": "{ifname} (No IP) ",
-        "format-disconnected": "Disconnected ⚠",
+        "format-ethernet": "{ifname}: {ipaddr} <span font_family='Font Awesome 6 Free'></span>",
+        "format-linked": "{ifname} (No IP) <span font_family='Font Awesome 6 Free'></span>",
+        "format-disconnected": "Disconnected <span font_family='Font Awesome 6 Free'></span>",
         "format-alt": "{ifname}: {ipaddr}"
     },
     "backlight": {
         "format": "{percent}% {icon}",
-        "format-icons": ["", ""],
+        "format-icons": ["<span font_family='Font Awesome 6 Free'></span>", "<span font_family='Font Awesome 6 Free'></span>"],
         "on-scroll-up": "xbacklight -inc 1",
         "on-scroll-down": "xbacklight -dec 1",
         "on-click": "wrap-brightness",
@@ -66,13 +66,13 @@
             "critical": 15
         },
         "format": "{capacity}% {icon}",
-        "format-charging": "{capacity}% ",
-        "format-plugged": "{capacity}% ",
+        "format-charging": "{capacity}% <span font_family='Font Awesome 6 Free'></span>",
+        "format-plugged": "{capacity}% <span font_family='Font Awesome 6 Free'></span>",
         "format-alt": "{time} {icon}",
-        "format-icons": ["", "", "", "", ""]
+        "format-icons": ["<span font_family='Font Awesome 6 Free'></span>", "<span font_family='Font Awesome 6 Free'></span>", "<span font_family='Font Awesome 6 Free'></span>", "<span font_family='Font Awesome 6 Free'></span>", "<span font_family='Font Awesome 6 Free'></span>"]
     },
     "custom/keyboard": {
-        "format": "",
+        "format": "<span font_family='Font Awesome 6 Free'></span>",
         "on-click": "pkill -SIGRTMIN wvkbd-mobintl"
     }
 }

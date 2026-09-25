@@ -1,6 +1,6 @@
 #!/bin/sh
 
-pkg-install pipewire wireplumber seatd turnstile nitro xdg-utils xtools
+pkg-install pipewire wireplumber seatd turnstile nitro xdg-utils xtools font-awesome6
 svenable seatd turnstile
 
 xdg-default text/plain kitty-open.desktop
