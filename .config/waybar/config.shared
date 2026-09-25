@@ -9,7 +9,11 @@
 
     "modules-left":["niri/workspaces"],
     "modules-center":["niri/window"],
-    "modules-right": ["pulseaudio", "network", "backlight", "battery", "clock", "tray"],
+    "modules-right": ["group/status", "clock", "tray"],
+    "group/status": {
+        "orientation": "inherit",
+        "modules": ["pulseaudio", "network", "backlight", "battery"]
+    },
     "tray": {
         "icon-size": 20,
         "spacing": 10
