@@ -1,15 +1,15 @@
 " vim:fdm=marker:tw=58
 
 " Pick a completion plugin, any completion plugin...
-let g:my_plugin_loaded_deoplete = 1
-" let g:my_plugin_loaded_mucomplete = 1
-let g:my_plugin_loaded_asyncomplete = 1
-let g:my_plugin_loaded_ncm2 = 1
-let g:my_plugin_loaded_coc = 1
-let g:my_plugin_loaded_cmp = 1
+let g:init_loaded_deoplete = 1
+" let g:init_loaded_mucomplete = 1
+let g:init_loaded_asyncomplete = 1
+let g:init_loaded_ncm2 = 1
+let g:init_loaded_coc = 1
+let g:init_loaded_cmp = 1
 
-let g:my_plugin_loaded_ctrlp = 1
-let g:my_plugin_loaded_clap = 1
+let g:init_loaded_ctrlp = 1
+let g:init_loaded_clap = 1
 
 let g:dirs_of_interest = [
       \ {'directory': '~/doc',
@@ -18,15 +18,14 @@ let g:dirs_of_interest = [
       \  'prefix': '<Leader>v'}
       \ ]
 
+" Local checkouts to use in place of the cloned plugin (init.packadd()).
 let g:dev_overrides = {
-      \ 'SevereOverfl0w/replant': '~/src',
-      \ 'clojure-vim/vim-jack-in': '~/src',
-      \ 'tpope/vim-dispatch': '~/src',
-      \}
+      \ 'https://github.com/SevereOverfl0w/campfire.nvim.git': '~/src/fortmonroe.co.uk/vim-campfire',
+      \ }
 
 let g:dir_to_doc = {
       \ '/home/iamdevloper/twitter': '/home/iamdevloper/doc/twitter.md',
       \ '/home/iamdevloper/website': '/home/iamdevloper/doc/worlddomination/'
       \ }
 
-call my_plugin#run()
+call init#run()
