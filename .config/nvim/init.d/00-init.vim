@@ -52,3 +52,18 @@ nmap ZB <CMD>Bdelete<CR>
 
 nnoremap gl <cmd>call v:lua.vim.diagnostic.open_float()<cr>
 lua vim.diagnostic.config({ virtual_text = { current_line = true } })
+
+" Build hooks live here, not beside their plugins: the first vim.pack.add()
+" installs everything missing from the lockfile, and PackChanged must already
+" be registered to see those installs.
+lua << EOF
+vim.api.nvim_create_autocmd('PackChanged', {
+  group = vim.api.nvim_create_augroup('init_markdown_preview', {}),
+  callback = function(ev)
+    local d = ev.data
+    if d.spec.name == 'markdown-preview.nvim' and (d.kind == 'install' or d.kind == 'update') then
+      vim.system({ 'yarn', 'install' }, { cwd = d.path .. '/app' }):wait()
+    end
+  end,
+})
+EOF
