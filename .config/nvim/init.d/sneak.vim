@@ -1,6 +1,6 @@
 scriptencoding utf-8
-let s:flash = v:true
-let s:sneak = s:flash ? v:false : v:true
+let s:leap = v:true
+let s:sneak = s:leap ? v:false : v:true
 
 " sneak provides alternatives to f,F which:
 " - Work across lines
@@ -36,18 +36,14 @@ endfunction
 let g:sneak#prompt = '❯'
 
 call init#after_source('*/plugin/sneak.vim', function('s:map_sneak'))
-" vim-sneak is only wanted when flash is not (see s:sneak above), and in that
-" case it is not in 'runtimepath' at all.
-if s:sneak
-  call init#packadd('https://github.com/justinmk/vim-sneak.git')
-endif
+call init#packadd('https://github.com/justinmk/vim-sneak.git', #{load: s:sneak})
 
-" flash.nvim ships no plugin/ file, so these mappings are set directly.
-nnoremap s <Cmd>lua require('flash').jump()<CR>
-xnoremap s <Cmd>lua require('flash').jump()<CR>
-onoremap s <Cmd>lua require('flash').jump()<CR>
-nnoremap S <Cmd>lua require('flash').treesitter()<CR>
-xnoremap S <Cmd>lua require('flash').treesitter()<CR>
-onoremap S <Cmd>lua require('flash').treesitter()<CR>
+function! s:map_leap() abort
+  omap s <Plug>(leap)
+  nmap s <Plug>(leap)
+  xmap s <Plug>(leap)
+  map S <Plug>(leap-anywhere)
+endfunction
 
-call init#packadd('https://github.com/folke/flash.nvim.git')
+call init#after_source('*/leap.nvim/plugin/init.lua', function('s:map_leap'))
+call init#packadd('https://codeberg.org/andyg/leap.nvim', #{load: s:leap})
