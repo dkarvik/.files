@@ -1,8 +1,12 @@
 call init#packadd('https://github.com/miikanissi/modus-themes.nvim.git')
-call init#packadd('https://github.com/sonph/onehalf.git')
-" onehalf keeps its colorschemes in a vim/ subdirectory, which the spec has no
-" field for: put it on 'runtimepath' by hand.
-lua vim.opt.rtp:append(vim.fn.stdpath('data') .. '/site/pack/core/opt/onehalf/vim')
+" onehalf keeps its colorschemes in a vim/ subdirectory.
+lua <<EOF
+require('init').packadd('https://github.com/sonph/onehalf.git', {
+  load = function(plug_data)
+    vim.opt.rtp:append(plug_data.path .. '/vim')
+  end,
+})
+EOF
 call init#packadd('https://gitlab.com/protesilaos/tempus-themes-vim.git')
 call init#packadd('https://github.com/NLKNguyen/papercolor-theme.git')
 
