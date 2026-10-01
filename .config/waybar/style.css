@@ -1,5 +1,5 @@
 * {
-    font-family: Roboto, Helvetica, Arial, sans-serif, 'Symbols Nerd Font';
+    font-family: Inter, Roboto, Helvetica, Arial, sans-serif, 'Symbols Nerd Font';
 }
 
 window#waybar {
@@ -13,7 +13,7 @@ window#waybar {
 window > box > * > widget > box, window > box > * > widget > label {
     background: #282828;
     border-radius: 20px;
-    border: 4px solid #4d9966;
+    border: 3px solid #4d9966;
 }
 
 .modules-left > widget > *, .modules-center > widget > *, .modules-right> widget > * {
@@ -60,6 +60,10 @@ button.urgent {
 
 #network.disconnected {
     border-color: #ff9500;
+}
+
+#custom-rot8.off {
+    color: #ff9500;
 }
 
 @keyframes urgentblink {
