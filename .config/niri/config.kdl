@@ -445,6 +445,11 @@ binds {
     // Powers off the monitors. To turn them back on, do any input like
     // moving the mouse or pressing any other key.
     Mod+Shift+P { power-off-monitors; }
+
+    // Notification controls (mako)
+    Mod+Shift+N { spawn "makoctl" "dismiss"; }
+    Mod+Shift+Ctrl+N { spawn "makoctl" "dismiss" "--all"; }
+    Mod+Shift+A { spawn "makoctl" "invoke"; }
 }
 
 
