@@ -1,0 +1,10 @@
+#!/bin/sh
+# wnitroctl - nitroctl wrapper for the nitro instance supervising the current
+# Wayland session. Derives the control socket the same way
+# spawn-wayland-services does: $XDG_RUNTIME_DIR/nitro-<display>.sock
+if [ -z "$WAYLAND_DISPLAY" ]; then
+    echo "wnitroctl: WAYLAND_DISPLAY not set (not in a Wayland session?)" >&2
+    exit 1
+fi
+: "${XDG_RUNTIME_DIR:=/run/user/$(id -u)}"
+exec env NITRO_SOCK="$XDG_RUNTIME_DIR/nitro-${WAYLAND_DISPLAY##*/}.sock" nitroctl "$@"
