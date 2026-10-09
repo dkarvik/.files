@@ -1,6 +1,7 @@
 local init = require('init')
 
 init.packadd("https://github.com/j-hui/fidget.nvim.git")
+require("fidget").setup({ notification = { window = { border = "rounded" } } })
 
 function LspStatus(...)
   local bufnr = vim.fn.winbufnr(vim.g.statusline_winid)
