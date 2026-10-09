@@ -1,3 +1,8 @@
+function! s:configure_modus_themes() abort
+  lua require('modus-themes').setup({ variants = { modus_operandi = 'tinted', modus_vivendi = 'tinted' }, line_nr_column_background = false })
+endfunction
+
+call init#after_source('*/plugin/modus-themes.lua', function('s:configure_modus_themes'))
 call init#packadd('https://github.com/miikanissi/modus-themes.nvim.git')
 " onehalf keeps its colorschemes in a vim/ subdirectory.
 lua <<EOF

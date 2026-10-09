@@ -151,13 +151,20 @@ function! s:configure_nvim_treesitter() abort
   augroup END
 endfunction
 
-call init#after_source('*/plugin/nvim-treesitter.lua', function('s:configure_nvim_treesitter'))
-call init#packadd(#{src: 'https://github.com/nvim-treesitter/nvim-treesitter.git', version: 'main'})
+if executable('tree-sitter')
+  call init#after_source('*/plugin/nvim-treesitter.lua', function('s:configure_nvim_treesitter'))
+  call init#packadd(#{src: 'https://github.com/nvim-treesitter/nvim-treesitter.git', version: 'main'})
+endif
 
 call init#packadd(#{src: 'https://github.com/SevereOverfl0w/nvim-treesitter-endwise.git', version: 'nvim-0.12'})
 
 call init#packadd('https://github.com/AndrewRadev/inline_edit.vim.git')
 
+function! s:configure_qalc() abort
+  lua require('qalc').setup({ cmd_args = { '--set', 'curconv 0' } })
+endfunction
+
+call init#after_source('*/plugin/qalc.lua', function('s:configure_qalc'))
 call init#packadd('https://github.com/Apeiros-46B/qalc.nvim.git')
 
 call init#packadd('https://github.com/terrastruct/d2-vim.git')
@@ -178,10 +185,12 @@ call init#packadd('https://github.com/moll/vim-bbye.git')
 call init#packadd('https://github.com/nvim-treesitter/nvim-treesitter-context.git')
 
 call init#packadd(#{src: 'https://github.com/SevereOverfl0w/annotator.nvim.git', version: 'qfs'})
+lua require('annotator').setup({})
 
 call init#packadd('https://github.com/digitaltoad/vim-pug.git')
 
 call init#packadd('https://github.com/folke/ts-comments.nvim.git')
+lua require('ts-comments').setup({ lang = { vim = { '" %s' } } })
 
 call init#packadd('https://github.com/purarue/yadm-git.vim.git')
 

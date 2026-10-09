@@ -7,6 +7,8 @@ end
 
 local init = require('init')
 
+vim.go.completeopt = 'menu,menuone,noselect,preview'
+
 local cmp_loaded = false
 local function load_cmp()
   if cmp_loaded then

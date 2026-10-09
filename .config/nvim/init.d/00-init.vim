@@ -58,11 +58,17 @@ lua vim.diagnostic.config({ virtual_text = { current_line = true } })
 " be registered to see those installs.
 lua << EOF
 vim.api.nvim_create_autocmd('PackChanged', {
-  group = vim.api.nvim_create_augroup('init_markdown_preview', {}),
+  group = vim.api.nvim_create_augroup('init_build_hooks', {}),
   callback = function(ev)
     local d = ev.data
     if d.spec.name == 'markdown-preview.nvim' and (d.kind == 'install' or d.kind == 'update') then
       vim.system({ 'yarn', 'install' }, { cwd = d.path .. '/app' }):wait()
+    end
+    if d.spec.name == 'nvim-treesitter' and d.kind == 'update' then
+      if not d.active then
+        vim.cmd.packadd('nvim-treesitter')
+      end
+      vim.cmd('TSUpdate')
     end
   end,
 })
