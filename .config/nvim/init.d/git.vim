@@ -108,6 +108,14 @@ endfunction
 command! -nargs=0 GitListChanges :exec 'Git difftool --name-status ' . g:gitgutter_diff_base
 
 function! ToggleDiff()
+  " In a git repo: stable base|work diff that follows :cnext through the
+  " Review quickfix. The lua module owns its own on/off state.
+  if FugitiveGitDir() != ''
+    call luaeval("require('review_diff').toggle(_A)", get(g:, 'gitgutter_diff_base', ''))
+    return
+  endif
+
+  " Outside a git repo: plain working-vs-saved diff toggled in place.
   if &diff
     for win in range(1, winnr('$'))
       let bufnr = winbufnr(win)
@@ -116,11 +124,7 @@ function! ToggleDiff()
       endif
     endfor
   else
-    if FugitiveGitDir() == ''
-      GitGutterDiffOrig
-    else
-      exec 'Gvdiffsplit! ' . get(g:, 'gitgutter_diff_base', '')
-    end
+    GitGutterDiffOrig
   endif
 endfunction
 
