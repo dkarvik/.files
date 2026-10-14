@@ -29,32 +29,30 @@ Direct `gh pr create` is blocked by a hook — this flow is the only path.
 
 1. Draft to a temp file (`/tmp/pr-<slug>.md`) using the template below.
 2. Open for review via the `remote-edit` skill (blocking open).
-3. On return, re-read the file. Parse front matter → flags, first content line →
-   title, remainder → body.
-4. Create it: `PR_SKILL=1 gh pr create --title <title> --body-file <body> [flags]`.
+3. On return, parse it per the `remote-edit` skill's "Parse a reviewed draft",
+   with `${CLAUDE_SKILL_DIR}/aliases.json` and
+   `${CLAUDE_SKILL_DIR}/aliases.local.json`. Resolve every `unresolved` entry.
+4. Create it: `PR_SKILL=1 gh pr create --title <title> --body-file <body> [flags]`,
+   `body` written to its own temp file. Each field `k` → `--k <value>`, repeated
+   per list element; `true` → bare `--k`; `false` → omitted.
    The `PR_SKILL=1` prefix is what the hook allows through — omit it elsewhere.
 
 ## Default template
 
 ```
 ---
-# gh pr create fields — leave blank to omit. Title = first line below, body = rest.
-base:                 # -B  branch to merge into (default: repo default)
-head:                 # -H  branch with the commits (default: current)
-reviewer:             # -r  handle(s), comma-separated
-assignee:             # -a  login(s), @me for self
-label:                # -l  name(s), comma-separated
-milestone:            # -m  name
-project:              # -p  title
-draft: false          # -d  true to open as draft
-no-maintainer-edit: false   # --no-maintainer-edit
+# gh pr create fields — YAML, leave blank to omit. Title = first line below, body = rest.
+base:                 # branch to merge into (default: repo default)
+head:                 # branch with the commits (default: current)
+reviewer:             # handle(s), comma-separated
+assignee:             # login(s), comma-separated, "me" for self
+label:                # name(s), comma-separated
+milestone:            # name
+project:              # title
+draft: false          # true to open as draft
+no-maintainer-edit: false
 ---
 Title goes on this line
 
 Body prose goes here.
 ```
-
-Map each non-empty front-matter key to its flag (comma-separated values →
-repeated flags, e.g. `label: a,b` → `-l a -l b`). Booleans emit the bare flag
-only when true. Title comes from `--title` (first content line), body from
-`--body-file` (the content after the title, written to its own temp file).

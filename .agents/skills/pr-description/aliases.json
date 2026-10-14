@@ -1,0 +1,14 @@
+{
+  "lists": [
+    "reviewer",
+    "assignee",
+    "label"
+  ],
+  "aliases": {
+    "assignee": {
+      "me": "@me"
+    },
+    "reviewer": {},
+    "label": {}
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "lists": [
+    "labels"
+  ],
+  "aliases": {
+    "priority": {
+      "none": 0,
+      "urgent": 1,
+      "high": 2,
+      "medium": 3,
+      "med": 3,
+      "low": 4
+    },
+    "assignee": {
+      "me": "me"
+    },
+    "team": {},
+    "project": {},
+    "state": {},
+    "estimate": {},
+    "labels": {}
+  }
+}
