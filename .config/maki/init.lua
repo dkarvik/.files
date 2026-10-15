@@ -7,11 +7,10 @@ require("librarian-forgejo.init")
 local osc_theme = require("osc_theme")
 
 maki.setup({
-  provider = {
-    default_model = "openai/gpt-5.6-terra",
-  },
-  always_thinking = "xhigh",
+  always_yolo = true,
+  always_workflow = true,
   ui = {
     theme = osc_theme.theme(),
+    notifications = "notify",
   }
 })
