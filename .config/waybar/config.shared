@@ -42,17 +42,21 @@
     },
     "layer": "top",
     "position": "top",
-    "height": 45,
+    "height": 20,
     "spacing": 10,
-    "margin-top": 10,
-    "margin-left": 12,
-    "margin-right": 12,
+    "margin-top": 0,
+    "margin-left": 0,
+    "margin-right": 0,
+    "reload_style_on_change": true,
     "modules-left": ["niri/workspaces"],
-    "modules-center": ["niri/window"],
-    "modules-right": ["group/status", "clock", "tray"],
-    "group/status": {
+    "niri/workspaces": {
+        "format": "●"
+    },
+    "modules-center": ["clock#modern"],
+    "modules-right": ["group/right", "tray"],
+    "group/right": {
         "orientation": "inherit",
-        "modules": ["pulseaudio", "network", "backlight", "battery"]
+        "modules": ["custom/keyboard", "custom/rot8", "group/audio-output", "group/audio-input", "network#modern", "backlight#modern", "battery#modern"]
     },
     "backlight": {
         "format": "{percent}% {icon}",
@@ -159,5 +163,14 @@
     "custom/keyboard": {
         "format": "<span font_family='Font Awesome 6 Free'></span>",
         "on-click": "pkill -SIGRTMIN wvkbd-mobintl"
+    },
+    "custom/rot8": {
+        "exec": "$HOME/.local/libexec/rot8/follow",
+        "return-type": "json",
+        "on-click": "$HOME/.local/libexec/rot8/toggle toggle"
+    },
+    "group/input": {
+        "orientation": "inherit",
+        "modules": ["custom/keyboard", "custom/rot8"]
     }
 }
