@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+
+mode=$(basename "$(dirname "$0")")
+case "$mode" in
+  dark-mode.d) theme=dark-theme.css ;;
+  light-mode.d) theme=light-theme.css ;;
+  *) exit 1 ;;
+esac
+
+cp "$HOME/.config/waybar/$theme" "$HOME/.config/waybar/auto-theme.css"

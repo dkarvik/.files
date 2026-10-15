@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+
+ln -sfn "$HOME/.config/dunst/light-theme.conf" "$HOME/.config/dunst/dunstrc.d/50-theme.conf"
+dunstctl reload

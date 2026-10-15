@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+
+mode=$(basename "$(dirname "$0")")
+case "$mode" in
+  dark-mode.d) theme=modus-vivendi.rasi ;;
+  light-mode.d) theme=modus-operandi.rasi ;;
+  *) exit 1 ;;
+esac
+
+ln -sfn "$HOME/.config/rofi/themes/$theme" "$HOME/.config/rofi/themes/modus.rasi"
