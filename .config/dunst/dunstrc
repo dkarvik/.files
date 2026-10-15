@@ -1,0 +1,31 @@
+[global]
+  # frame_color = "#ffb347"
+  # frame_width = 4
+  # offset = (12, 12) # Match niri gap, less the frame width (as niri would)
+
+  frame_width = 2
+  offset = (14, 14) # Match niri gap(16), less the frame width (as niri would)
+
+  enable_posix_regex = true
+  corner_radius = 2 # Again, match niri
+  font = Inter 10
+  gap_size = 8 # 50% of offset looks good
+  padding = 4
+
+  dmenu = rofi -dmenu -i -p "Notification"
+
+# Annoying things notifying from the terminal
+[no_body]
+  body = "^$"
+  format = "%s"
+
+# timeout = 0 makes the notification sticky rather than disappear after 10s
+
+[urgency_low]
+    timeout = 0
+
+[urgency_normal]
+    timeout = 0
+
+[urgency_critical]
+    timeout = 0

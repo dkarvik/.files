@@ -4,6 +4,11 @@ endfunction
 
 call init#after_source('*/plugin/modus-themes.lua', function('s:configure_modus_themes'))
 call init#packadd('https://github.com/miikanissi/modus-themes.nvim.git')
+lua <<EOF
+require('modus-themes').setup({
+  variants = { modus_operandi = 'tinted', modus_vivendi = 'tinted' },
+})
+EOF
 " onehalf keeps its colorschemes in a vim/ subdirectory.
 lua <<EOF
 require('init').packadd('https://github.com/sonph/onehalf.git', {

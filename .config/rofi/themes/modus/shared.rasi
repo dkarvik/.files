@@ -1,0 +1,132 @@
+/* Shared layout for the Modus spotlight rofi themes.
+   The importing variant file defines the palette (@bg0, @fg0, ...). */
+
+configuration {
+    show-icons: true;
+    display-drun: "Apps";
+    display-run: "Run";
+}
+
+* {
+    font: "Inter 10";
+
+    background-color: transparent;
+    text-color: @fg0;
+
+    margin: 0;
+    padding: 0;
+    spacing: 0;
+}
+
+window {
+    background-color: @bg0;
+    border: 2px;
+    border-color: @out0;
+
+    location: center;
+    width: 640;
+    border-radius: 4;
+}
+
+inputbar {
+    font: "Inter 12";
+    padding: 3px 12px;
+    spacing: 8px;
+    children: [ icon-search, entry ];
+}
+
+icon-search {
+    expand: false;
+    filename: "search";
+    size: 14px;
+}
+
+icon-search, entry, element-icon, element-text {
+    vertical-align: 0.5;
+}
+
+entry {
+    font: inherit;
+
+    placeholder         : "Search";
+    placeholder-color   : @fg2;
+}
+
+message {
+    background-color: @bg1;
+}
+
+textbox {
+    padding: 0px 12px;
+}
+
+listview {
+    lines: 15;
+    columns: 1;
+
+    fixed-height: false;
+}
+
+element {
+    padding: 3px 12px;
+    spacing: 8px;
+    background-color: transparent;
+}
+
+element normal active {
+    background-color: @act0;
+    text-color: @act1;
+}
+
+element alternate active {
+    background-color: @act0;
+    text-color: @act1;
+}
+
+element selected normal, element selected active {
+    background-color: @hl0;
+    text-color: @fg0;
+}
+
+element normal urgent, element alternate urgent {
+    text-color: @urg0;
+}
+
+element selected urgent {
+    background-color: @urg0;
+    text-color: @urg1;
+}
+
+element-icon {
+    size: 14px;
+}
+
+element-text {
+    text-color: inherit;
+}
+
+/* Mode switcher (along the bottom): mainbox deliberately has no `children`
+   property, so rofi appends the mode-switcher only when -sidebar-mode is
+   passed - single-mode invocations show no bar at all.
+   Styled as a modus-themes.nvim TabLine: inactive tabs are bg-tab-other
+   cells on a bg-tab-bar strip; the selected tab is TabLineSel, which uses
+   bg_tab_current (== bg-main) so it reads as connected to the list above. */
+mode-switcher {
+    padding: 0;
+    spacing: 0;
+    background-color: @tb2;
+}
+
+button {
+    padding: 3px 12px;
+    border-radius: 0;
+    background-color: @tb0;
+    text-color: @tb1;
+    cursor: pointer;
+}
+
+button selected {
+    background-color: @hl0;
+    text-color: @fg0;
+}
+

@@ -1,0 +1,22 @@
+* {
+    bg0: #0d0e1c;
+    bg1: #555a66;
+    act0: #4a4f69;
+    act1: #f4f4f4;
+    hl0: #303a6f;
+    urg0: #ff5f59;
+    urg1: #0d0e1c;
+    out0: #c4c4c4;
+    tb0: #4a4f6a;
+    tb1: #f7f7f7;
+    tb2: #2c3045;
+
+    fg0: #e6e6e6;
+    fg2: #969696;
+}
+
+@import "modus/shared.rasi"
+
+element-text {
+    highlight: underline #d0bc00;
+}

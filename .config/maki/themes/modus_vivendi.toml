@@ -1,0 +1,179 @@
+# Modus Vivendi Tinted (dark) for Maki
+# Ported from miikanissi/modus-themes.nvim (nvim config, tinted variant)
+# Syntax scopes are Helix-compatible
+
+"comment"                         = { fg = "red_faint" }
+"comment.block"                   = { fg = "red_faint" }
+"comment.block.documentation"     = { fg = "docstring" }
+"comment.line"                    = { fg = "red_faint" }
+"comment.line.documentation"      = { fg = "docstring" }
+
+"constant"                        = { fg = "blue_cooler" }
+"constant.builtin"                = { fg = "magenta" }
+"constant.builtin.boolean"        = { fg = "blue", modifiers = ["bold"] }
+"constant.character"              = { fg = "blue_warmer" }
+"constant.character.escape"       = { fg = "yellow_faint" }
+"constant.macro"                  = { fg = "blue_cooler" }
+"constant.numeric"                = { fg = "foreground" }
+"constructor"                     = { fg = "yellow_cooler" }
+
+"error"                           = { fg = "red" }
+"warning"                         = { fg = "yellow_warmer" }
+"info"                            = { fg = "cyan_cooler" }
+"hint"                            = { fg = "cyan_faint" }
+
+"diff.delta"                      = { fg = "fg_changed" }
+"diff.minus"                      = { fg = "fg_removed" }
+"diff.plus"                       = { fg = "fg_added" }
+
+"function"                        = { fg = "yellow_cooler" }
+"function.builtin"                = { fg = "magenta" }
+"function.call"                   = { fg = "pink" }
+"function.macro"                  = { fg = "yellow_cooler" }
+"function.method"                 = { fg = "yellow_cooler" }
+
+"keyword"                         = { fg = "blue_warmer" }
+"keyword.control.conditional"     = { fg = "blue_warmer" }
+"keyword.control.exception"       = { fg = "blue_warmer" }
+"keyword.control.import"          = { fg = "red_cooler" }
+"keyword.control.repeat"          = { fg = "blue_warmer" }
+"keyword.directive"               = { fg = "red_cooler" }
+"keyword.function"                = { fg = "yellow_cooler" }
+"keyword.operator"                = { fg = "foreground" }
+"keyword.return"                  = { fg = "blue_warmer" }
+"keyword.storage"                 = { fg = "blue_warmer" }
+"keyword.storage.modifier"        = { fg = "blue_warmer" }
+"keyword.storage.type"            = { fg = "blue_warmer" }
+
+"label"                           = { fg = "cyan" }
+"attribute"                       = { fg = "red_cooler" }
+"namespace"                       = { fg = "red_cooler" }
+"annotation"                       = { fg = "red_cooler" }
+
+"markup.bold"                     = { modifiers = ["bold"] }
+"markup.heading"                  = { fg = "fg_alt", modifiers = ["bold"] }
+"markup.italic"                   = { modifiers = ["italic"] }
+"markup.link.text"                = { fg = "cyan_cooler" }
+"markup.link.url"                 = { fg = "fg_alt", modifiers = ["underlined"] }
+"markup.list"                     = { fg = "foreground" }
+"markup.quote"                    = { modifiers = ["italic"] }
+"markup.raw"                      = { fg = "blue" }
+"markup.strikethrough"            = { modifiers = ["crossed_out"] }
+
+"punctuation"                     = { fg = "foreground" }
+"punctuation.bracket"             = { fg = "foreground" }
+"punctuation.delimiter"           = { fg = "foreground" }
+"punctuation.special"             = { fg = "foreground" }
+
+"special"                         = { fg = "magenta" }
+
+"string"                          = { fg = "blue" }
+"string.regexp"                   = { fg = "green_cooler" }
+"string.special"                  = { fg = "red_faint" }
+"string.symbol"                   = { fg = "cyan" }
+
+"tag"                             = { fg = "cyan" }
+"tag.attribute"                   = { fg = "cyan" }
+"tag.delimiter"                   = { fg = "foreground" }
+
+"type"                            = { fg = "green_cooler" }
+"type.builtin"                    = { fg = "green_cooler" }
+"type.enum.variant"               = { fg = "blue_cooler" }
+
+"variable"                        = { fg = "slate" }
+"variable.builtin"                = { fg = "blue_warmer" }
+"variable.other"                  = { fg = "slate" }
+"variable.other.member"           = { fg = "cyan_warmer" }
+"variable.parameter"              = { fg = "cyan_warmer" }
+
+[palette]
+background       = "#0d0e1c"
+bg_dim           = "#1d2235"
+foreground       = "#e6e6e6"
+fg_dim           = "#969696"
+fg_alt           = "#c6daff"
+border           = "#61647a"
+border_highlight = "#b290b0"
+docstring        = "#9ac8e0"
+
+red              = "#ff5f59"
+red_cooler       = "#ff7f86"
+red_faint        = "#ff9f80"
+green_cooler     = "#00c06f"
+yellow           = "#d0bc00"
+yellow_warmer    = "#fec43f"
+yellow_cooler    = "#dfaf7a"
+yellow_faint     = "#d2b580"
+blue             = "#2fafff"
+blue_warmer      = "#79a8ff"
+blue_cooler      = "#00bcff"
+magenta          = "#feacd0"
+magenta_warmer   = "#f78fe7"
+magenta_cooler   = "#b6a0ff"
+cyan             = "#00d3d0"
+cyan_warmer      = "#4ae2f0"
+cyan_cooler      = "#6ae4b9"
+cyan_faint       = "#9ac8e0"
+slate            = "#76afbf"
+pink             = "#d09dc0"
+
+bg_magenta_intense = "#7030af"
+
+bg_added           = "#003a2f"
+bg_added_refine    = "#035542"
+bg_removed         = "#4f1127"
+bg_removed_refine  = "#781a3a"
+fg_added           = "#a0e0a0"
+fg_removed         = "#ffbfbf"
+fg_changed          = "#efef80"
+
+[ui]
+user               = { fg = "blue" }
+assistant          = { fg = "foreground" }
+assistant_prefix   = { fg = "magenta" }
+thinking           = { fg = "fg_dim", modifiers = ["italic"] }
+tool_bg            = { bg = "bg_dim" }
+tool               = { fg = "foreground" }
+tool_path          = { fg = "blue" }
+tool_annotation    = { fg = "fg_dim" }
+tool_prefix        = { fg = "foreground", modifiers = ["bold"] }
+tool_success       = { fg = "green_cooler" }
+tool_error         = { fg = "red" }
+tool_dim           = { fg = "fg_dim" }
+error              = { fg = "red" }
+status_dim         = { fg = "fg_dim" }
+strikethrough      = { fg = "fg_dim", modifiers = ["crossed_out"] }
+plan_rule          = { fg = "magenta_cooler", modifiers = ["bold"] }
+code_block         = { fg = "foreground" }
+horizontal_rule    = { fg = "border" }
+table_border       = { fg = "border" }
+diff_old           = { bg = "bg_removed" }
+diff_new           = { bg = "bg_added" }
+diff_old_emphasis  = { bg = "bg_removed_refine" }
+diff_new_emphasis  = { bg = "bg_added_refine" }
+diff_line_nr       = { fg = "fg_dim" }
+todo_completed     = { fg = "green_cooler" }
+todo_in_progress   = { fg = "yellow_warmer" }
+todo_pending        = { fg = "fg_dim" }
+todo_cancelled     = { fg = "red", modifiers = ["crossed_out"] }
+item_selected      = { fg = "foreground", bg = "bg_magenta_intense" }
+item               = { fg = "cyan" }
+item_desc          = { fg = "fg_dim" }
+accent             = { fg = "blue_warmer" }
+panel_border       = { fg = "border_highlight" }
+panel_title        = { fg = "blue", modifiers = ["bold"] }
+cursor             = { fg = "background", bg = "foreground" }
+keybind_key        = { fg = "cyan", modifiers = ["bold"] }
+keybind_section    = { fg = "blue", modifiers = ["bold"] }
+input_border       = { fg = "border" }
+keybind_desc       = { fg = "foreground" }
+queue              = { fg = "magenta" }
+plan_path          = { fg = "blue", modifiers = ["bold"] }
+status_notice      = { fg = "yellow_warmer" }
+status_retry_error = { fg = "red" }
+status_retry_info  = { fg = "fg_dim" }
+input_placeholder  = { fg = "fg_dim" }
+queue_delete       = { fg = "red", modifiers = ["bold"] }
+timestamp          = { fg = "fg_dim" }
+spinner            = { fg = "yellow" }
+active             = { fg = "cyan" }

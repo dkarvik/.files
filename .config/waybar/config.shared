@@ -1,19 +1,4 @@
 {
-    "layer": "top",
-    "position": "top",
-    "height": 45,
-    "spacing": 10,
-    "margin-top": 10,
-    "margin-left": 12,
-    "margin-right": 12,
-
-    "modules-left":["niri/workspaces"],
-    "modules-center":["niri/window"],
-    "modules-right": ["group/status", "clock", "tray"],
-    "group/status": {
-        "orientation": "inherit",
-        "modules": ["pulseaudio", "network", "backlight", "battery"]
-    },
     "tray": {
         "icon-size": 20,
         "spacing": 10
@@ -21,6 +6,10 @@
     "clock": {
         "format": "{:%c}",
         "format-alt": "{:%F %R}"
+    },
+    "clock#modern": {
+        "format": "<b>{0:%H:%M}</b> {0:%a %b %Om}",
+        "format-alt": "{:%c}"
     },
     "pulseaudio": {
         "format": "{icon}  {volume}% {format_source}",
@@ -51,13 +40,27 @@
         "format-disconnected": "Disconnected <span font_family='Font Awesome 6 Free'></span>",
         "format-alt": "{ifname}: {ipaddr}"
     },
+    "layer": "top",
+    "position": "top",
+    "height": 45,
+    "spacing": 10,
+    "margin-top": 10,
+    "margin-left": 12,
+    "margin-right": 12,
+    "modules-left": ["niri/workspaces"],
+    "modules-center": ["niri/window"],
+    "modules-right": ["group/status", "clock", "tray"],
+    "group/status": {
+        "orientation": "inherit",
+        "modules": ["pulseaudio", "network", "backlight", "battery"]
+    },
     "backlight": {
         "format": "{percent}% {icon}",
         "format-icons": ["<span font_family='Font Awesome 6 Free'></span>", "<span font_family='Font Awesome 6 Free'></span>"],
         "on-scroll-up": "xbacklight -inc 1",
         "on-scroll-down": "xbacklight -dec 1",
         "on-click": "wrap-brightness",
-        "on-click-right": "xbacklight -dec 15",
+        "on-click-right": "xbacklight -dec 15"
     },
     "battery": {
         "states": {
@@ -70,6 +73,88 @@
         "format-plugged": "{capacity}% <span font_family='Font Awesome 6 Free'></span>",
         "format-alt": "{time} {icon}",
         "format-icons": ["<span font_family='Font Awesome 6 Free'></span>", "<span font_family='Font Awesome 6 Free'></span>", "<span font_family='Font Awesome 6 Free'></span>", "<span font_family='Font Awesome 6 Free'></span>", "<span font_family='Font Awesome 6 Free'></span>"]
+    },
+    "network#modern": {
+        "format-wifi": "<span font_family='Font Awesome 6 Free'></span>",
+        "tooltip-format-wifi": "{frequency}GHz {bandwidthUpBytes}/{bandwidthDownBytes}\n{ifname}: {ipaddr}\n{essid}({signalStrength}%)",
+        "format-ethernet": "{ifname}: {ipaddr} <span font_family='Font Awesome 6 Free'></span>",
+        "format-linked": "{ifname} (No IP) <span font_family='Font Awesome 6 Free'></span>",
+        "format-disconnected": "Disconnected <span font_family='Font Awesome 6 Free'></span>"
+    },
+    "backlight#modern": {
+        "format": "{icon}",
+        "format-icons": ["<span font_family='Font Awesome 6 Free'></span>", "<span font_family='Font Awesome 6 Free'></span>"],
+        "tooltip": "{percent}%",
+        "on-scroll-up": "xbacklight -inc 1",
+        "on-scroll-down": "xbacklight -dec 1",
+        "on-click": "wrap-brightness",
+        "on-click-right": "xbacklight -dec 15"
+    },
+    "battery#modern": {
+        "states": {
+            "good": 95,
+            "warning": 50,
+            "critical": 15
+        },
+        "format": "{capacity}% {icon}",
+        "format-charging": "{capacity}% <span font_family='Font Awesome 6 Free'></span>",
+        "format-plugged": "{capacity}% <span font_family='Font Awesome 6 Free'></span>",
+        "format-alt": "{time} {icon}",
+        "format-icons": ["<span font_family='Font Awesome 6 Free'></span>", "<span font_family='Font Awesome 6 Free'></span>", "<span font_family='Font Awesome 6 Free'></span>", "<span font_family='Font Awesome 6 Free'></span>", "<span font_family='Font Awesome 6 Free'></span>"]
+    },
+    "group/audio-output": {
+        "orientation": "horizontal",
+        "drawer": {
+            "click-to-reveal": false,
+            "transition-duration": 180
+        },
+        "modules": ["custom/audio-output-icon", "pulseaudio/slider#output", "pulseaudio#output"]
+    },
+    "custom/audio-output-icon": {
+        "exec": "$HOME/.local/libexec/waybar-audio-icon sink",
+        "return-type": "json",
+        "interval": 1,
+        "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "on-click-middle": "pavucontrol",
+        "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +2%",
+        "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -2%"
+    },
+    "pulseaudio/slider#output": {
+        "orientation": "horizontal",
+        "target": "sink",
+        "min": 0,
+        "max": 100
+    },
+    "pulseaudio#output": {
+        "target": "sink",
+        "on-click": "pavucontrol --tab 3"
+    },
+    "group/audio-input": {
+        "orientation": "horizontal",
+        "drawer": {
+            "click-to-reveal": false,
+            "transition-duration": 180
+        },
+        "modules": ["custom/audio-input-icon", "pulseaudio/slider#input", "pulseaudio#input"]
+    },
+    "custom/audio-input-icon": {
+        "exec": "$HOME/.local/libexec/waybar-audio-icon source",
+        "return-type": "json",
+        "interval": 1,
+        "on-click-right": "pactl set-source-mute @DEFAULT_SOURCE@ toggle",
+        "on-click-middle": "pavucontrol --tab=4",
+        "on-scroll-up": "pactl set-source-volume @DEFAULT_SOURCE@ +2%",
+        "on-scroll-down": "pactl set-source-volume @DEFAULT_SOURCE@ -2%"
+    },
+    "pulseaudio/slider#input": {
+        "orientation": "horizontal",
+        "target": "source",
+        "min": 0,
+        "max": 100
+    },
+    "pulseaudio#input": {
+        "target": "source",
+        "on-click": "pavucontrol --tab 4"
     },
     "custom/keyboard": {
         "format": "<span font_family='Font Awesome 6 Free'></span>",

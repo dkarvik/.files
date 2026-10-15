@@ -1,99 +1,130 @@
-* {
-    font-family: Inter, Roboto, Helvetica, Arial, sans-serif, 'Symbols Nerd Font';
-}
-
-window#waybar {
+#waybar.modern {
     background: rgba(0,0,0,0);
-    color: #ffffff;
-    transition-property: background-color, border-color;
-    transition-duration: .5s;
-    font-size: 12px;
+    font-size: 14px;
+    font-family: Inter, 'Font Awesome 6 Free', sans-serif;
 }
 
-window > box > * > widget > box, window > box > * > widget > label {
-    background: #282828;
-    border-radius: 20px;
-    border: 3px solid #4d9966;
+#waybar.modern #workspaces button {
+    background: transparent;
 }
 
-.modules-left > widget > *, .modules-center > widget > *, .modules-right> widget > * {
-    padding: 0 20px;
+#waybar.modern #workspaces button {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    color: @inactive-border;
+    font-size: 9px;
+    margin: 0 3px;
+    min-width: 0;
+    padding: 0;
+    transition: color 160ms ease;
 }
 
-/* Groups of widgets: group/xxx */
-widget > box > widget > * {
+#waybar.modern #workspaces button:hover {
+    background: transparent;
+    box-shadow: none;
+    color: @active-border;
+}
+
+#waybar.modern #workspaces button.focused {
+    background: transparent;
+    box-shadow: none;
+    color: @color6;
+}
+
+#waybar.modern #workspaces button.active:not(.focused) {
+    color: alpha(@foreground, 0.68);
+}
+
+#waybar.modern #custom-rot8.off {
+    color: @inactive-border;
+    transition: color 160ms ease;
+}
+
+#waybar.modern #custom-rot8.on {
+    color: @foreground;
+    transition: color 160ms ease;
+}
+
+window#waybar.modern .modules-left > widget > box,
+window#waybar.modern .modules-left > widget > label {
+    padding-right: 15px;
     padding-left: 10px;
-    margin-right: 11px; /* padding + border, no box-sizing */
 }
 
-widget > box > widget:first-child > * {
-    padding-left: 0;
+
+window#waybar.modern .modules-center > widget > box,
+window#waybar.modern .modules-center > widget > label {
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
-widget > box > widget {
-    border-right: 1px solid #383838;
+window#waybar.modern .modules-right > widget > box:first-child,
+window#waybar.modern .modules-right > widget > label:first-child {
+    padding-left: 15px;
+    padding-right: 10px;
 }
 
-widget > box > widget:last-child {
-    border-right: 0;
+window#waybar.modern .modules-right > widget > box > widget > label,
+window#waybar.modern .modules-right > widget > box > widget > box {
+    margin-right: 10px;
 }
 
-widget > box > widget:last-child > * {
+window#waybar.modern .modules-right > widget > box > widget:last-child > label,
+window#waybar.modern .modules-right > widget > box > widget:last-child > box {
     margin-right: 0;
 }
 
-#workspaces button { color: inherit; } /* otherwise workspaces is a default dull grey colour */
-#workspaces button.focused > *, #workspaces button.active > * { background: #010101; }
-#workspaces > button { border-right: 1px solid #383838; }
-#workspaces > button:last-child { border-right: 0; }
-
-/* move workspace padding so coloured background is wider */
-#workspaces button { padding: 0; }
-#workspaces button > * { padding: 0 10px; }
-
-/* hide window name when no window focused, kinda (uses empty workspace as proxy) */
-window#waybar.empty box#window { opacity: 0 }
-
-button.urgent {
-    background-color: #eb4d4b;
+#waybar.modern .modules-left > *, #waybar.modern .modules-center > *, #waybar.modern .modules-right > * {
+    background: @background;
+    color: @foreground;
 }
 
-#network.disconnected {
-    border-color: #ff9500;
+#waybar.modern .modules-left > * { border-radius: 0 0 20px 0; }
+#waybar.modern .modules-right > * { border-radius: 0 0 0 20px; }
+#waybar.modern .modules-center > * { border-radius: 0 0 20px 20px; }
+
+window#waybar.modern #battery.critical:not(.charging) {
+    color: @waybar-critical-foreground;
 }
 
-#custom-rot8.off {
-    color: #ff9500;
+window#waybar.modern #battery.warning:not(.charging) {
+    color: @waybar-warning-foreground;
 }
 
-@keyframes urgentblink {
-    to {
-        border-color: #f0a500;
-    }
-}
-
-@keyframes criticalblink {
-    to {
-        border-color: #eb4d4b;
-    }
-}
-
-#battery.warning:not(.charging), #battery.critical:not(.charging) {
-    animation-duration: 0.4s;
-    animation-timing-function: steps(12);
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
-}
-
-#battery.warning:not(.charging) { animation-name: urgentblink; }
-#battery.critical:not(.charging) { animation-name: criticalblink; }
-
-#tray > .passive {
-    -gtk-icon-effect: dim;
-    color: #ffffff;
-}
-
-#tray > .needs-attention {
+window#waybar.modern #tray > .needs-attention {
     -gtk-icon-effect: highlight;
-    color: #ffffff;
+    background-color: @waybar-attention-background;
+    color: @waybar-attention-foreground;
+}
+
+#waybar.modern .modules-left > #workspaces {
+    background: transparent;
+    border-radius: 0;
+}
+
+
+#pulseaudio-slider {
+    padding: 0 6px;
+}
+
+#pulseaudio-slider slider {
+    min-height: 10px;
+    min-width: 10px;
+    opacity: 1;
+}
+
+#pulseaudio-slider trough {
+    min-width: 110px;
+    min-height: 4px;
+    background: @active-tab-background;
+}
+
+#pulseaudio-slider highlight {
+    min-height: 4px;
+    background: @color10;
+}
+
+#pulseaudio-slider.muted highlight {
+    background-color: @color1;
 }
