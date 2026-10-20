@@ -53,10 +53,10 @@
         "format": "●"
     },
     "modules-center": ["clock#modern"],
-    "modules-right": ["group/right", "tray"],
+    "modules-right": ["group/right"],
     "group/right": {
         "orientation": "inherit",
-        "modules": ["custom/keyboard", "custom/rot8", "group/audio-output", "group/audio-input", "network#modern", "backlight#modern", "battery#modern"]
+        "modules": ["custom/keyboard", "custom/rot8", "group/audio-output", "group/audio-input", "network#modern", "backlight#modern", "battery#modern", "tray"]
     },
     "backlight": {
         "format": "{percent}% {icon}",
