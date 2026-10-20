@@ -17,8 +17,8 @@ local function packadd_sexp()
     return
   end
   loaded = true
-  vim.cmd.packadd('vim-sexp')
   vim.cmd.packadd('vim-sexp-mappings-for-regular-people')
+  vim.cmd.packadd('vim-sexp')
 end
 vim.api.nvim_create_autocmd({'BufReadPre', 'BufNewFile'}, {
   pattern = '*',
@@ -39,6 +39,7 @@ vim.api.nvim_create_autocmd('FileType', {
   callback = packadd_sexp,
 })
 init.packadd({ src = 'https://github.com/guns/vim-sexp.git', version = 'master' }, { load = function() end })
+init.packadd({ src = 'https://github.com/tpope/vim-sexp-mappings-for-regular-people.git'}, { load = function() end })
 EOF
 let g:sexp_regput_fallback_source = 'o'
 " When pasting into a comment or string, don't use special sexp-aware paste behaviour
