@@ -112,11 +112,8 @@ endif
 " nREPL.
 function! s:configure_jack_in() abort
   let g:jack_in_injections['cider/piggieback'] =
-      \  {'version': '0.5.3',
+      \  {'version': '0.8.0',
       \   'middleware': 'cider.piggieback/wrap-cljs-repl'}
-
-  let g:jack_in_injections['refactor-nrepl/refactor-nrepl']['version'] = '3.6.0'
-  let g:jack_in_injections['cider/cider-nrepl']['version'] = '0.29.0'
 
   let g:jack_in_injections['io.dominic/nrepl-bind'] =
               \  {'version': '0.1.1',
