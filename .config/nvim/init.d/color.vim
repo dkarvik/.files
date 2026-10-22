@@ -21,7 +21,7 @@ call init#packadd('https://gitlab.com/protesilaos/tempus-themes-vim.git')
 call init#packadd('https://github.com/NLKNguyen/papercolor-theme.git')
 
 " [1] is the light scheme, [2] the dark one.
-let s:preferred_color_scheme = get(g:, 'preferred_color_scheme', ['tempus-themes-vim', 'tempus_day', 'tempus_night'])
+let s:preferred_color_scheme = get(g:, 'preferred_color_scheme', ['modus-themes.nvim', 'modus_operandi', 'modus_vivendi'])
 
 let g:PaperColor_Theme_Options = {
 \   'theme': {
