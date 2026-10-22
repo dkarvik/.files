@@ -118,23 +118,21 @@ function! MaybeTabCwds(...)
 endfunction
 let g:tablabel = '%N%{flagship#tabmodified()} %{MaybeTabCwds()}'
 
-function! MaybeActivateBaleia(baleia)
+function! MaybeActivateBaleia() abort
     if get(w:, 'quickfix_title', '') =~? 'clojure.test'
         setlocal modifiable undolevels=-1
-        silent call a:baleia.once(bufnr('%'))
+        silent call v:lua.require'init'.baleia_colorize(bufnr('%'), #{})
         setlocal nomodifiable nomodified
     endif
 endfunction
 
 function! s:configure_baleia() abort
-  let s:baleia = luaeval("require('baleia').setup({ strip_ansi_codes = false })")
-  let s:baleia_strips = luaeval("require('baleia').setup()")
-  command! BaleiaColorize call s:baleia.once(bufnr('%'))
-  command! BaleiaLogs call s:baleia.logger.show()
+  command! BaleiaColorize call v:lua.require'init'.baleia_colorize(bufnr('%'), #{strip_ansi_codes: v:false})
+  command! BaleiaLogs call v:lua.require'init'.baleia_logs(#{strip_ansi_codes: v:false})
   augroup BaleiaUser
     autocmd!
-    autocmd BufReadPost quickfix call MaybeActivateBaleia(s:baleia_strips)
-    autocmd BufWinEnter quickfix call MaybeActivateBaleia(s:baleia_strips)
+    autocmd BufReadPost quickfix call MaybeActivateBaleia()
+    autocmd BufWinEnter quickfix call MaybeActivateBaleia()
   augroup END
 endfunction
 
