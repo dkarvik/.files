@@ -41,6 +41,7 @@
         "format-alt": "{ifname}: {ipaddr}"
     },
     "layer": "top",
+    "name": "modern",
     "position": "top",
     "height": 20,
     "spacing": 10,
