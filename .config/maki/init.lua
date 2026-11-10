@@ -1,11 +1,7 @@
-local librarian = require("librarian.init")
-librarian.register_extension("codex_search")
 maki.pack.add({ "https://github.com/dkarvik/maki-codex.git", "https://github.com/dkarvik/maki-mistral.git" })
 require("modes")
 require("thinking")
-require("librarian-git.init")
-require("librarian-github.init")
-require("librarian-forgejo.init")
+require("git_repos")
 local osc_theme = require("osc_theme")
 
 maki.setup({
