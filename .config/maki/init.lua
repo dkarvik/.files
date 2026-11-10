@@ -1,6 +1,7 @@
 require("librarian.init")
 require("codex")
 require("modes")
+require("thinking")
 require("librarian-git.init")
 require("librarian-github.init")
 require("librarian-forgejo.init")
