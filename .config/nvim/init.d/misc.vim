@@ -54,12 +54,13 @@ call init#packadd('https://github.com/tpope/vim-eunuch.git')
 call init#packadd('https://github.com/rhysd/conflict-marker.vim.git')
 
 let g:textobj_diff_no_default_key_mappings = 1
-" vim-textobj-diff is never loaded at startup; the FileType diff autocmd
-" below packadds it (and vim-textobj-user) on demand.
+" vim-textobj-diff is installed but not loaded at startup; the FileType
+" autocmd below packadds it (and vim-textobj-user) on demand.
+call init#packadd('https://github.com/kana/vim-textobj-diff.git', #{load: v:false})
 
 augroup init_textobj_diff
   autocmd!
-  autocmd FileType diff ++once packadd vim-textobj-user | packadd vim-textobj-diff
+  autocmd FileType diff,gitcommit ++once packadd vim-textobj-user | packadd vim-textobj-diff
 augroup END
 
 " `:Git status` diffs include trailing whitespace for the diff.  So does `:Git show HEAD`
