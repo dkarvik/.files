@@ -56,7 +56,7 @@ local function refresh_mode(current)
   show_mode(current and mode_name(configured_modes, names, current))
 end
 
-maki.keymap.set("n", "<C-Space>", function()
+maki.keymap.set({"n", "i"}, "<M-m>", function()
   local configured_modes, names = modes()
   if not configured_modes then
     return
