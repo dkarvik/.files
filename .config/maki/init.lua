@@ -11,6 +11,7 @@ maki.setup({
   always_yolo = true,
   always_workflow = true,
   ui = {
+    splash_animation = false,
     theme = osc_theme.theme(),
     notifications = "notify",
   }
