@@ -143,10 +143,10 @@ call s:configure_baleia()
 " call init#packadd('powerman/vim-plugin-ansiesc')
 
 function! s:configure_nvim_treesitter() abort
-  lua require'nvim-treesitter'.install({"lua", "vim", "vimdoc", "bash", "clojure"})
+  lua require'nvim-treesitter'.install({"lua", "vim", "vimdoc", "bash", "clojure", "diff", "gitcommit", "markdown"})
   augroup treesitter_start
           autocmd!
-          autocmd FileType lua,vim,help,bash,clojure call v:lua.vim.treesitter.start(str2nr(expand('<abuf>')))
+          autocmd FileType lua,vim,help,bash,clojure,diff,gitcommit,markdown call v:lua.vim.treesitter.start(str2nr(expand('<abuf>')))
   augroup END
 endfunction
 
