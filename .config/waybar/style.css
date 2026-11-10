@@ -104,27 +104,27 @@ window#waybar.modern #tray > .needs-attention {
 }
 
 
-#pulseaudio-slider {
+window#waybar.modern #pulseaudio-slider {
     padding: 0 6px;
 }
 
-#pulseaudio-slider slider {
+window#waybar.modern #pulseaudio-slider slider {
     min-height: 10px;
     min-width: 10px;
     opacity: 1;
 }
 
-#pulseaudio-slider trough {
+window#waybar.modern #pulseaudio-slider trough {
     min-width: 110px;
     min-height: 4px;
     background: @active-tab-background;
 }
 
-#pulseaudio-slider highlight {
+window#waybar.modern #pulseaudio-slider highlight {
     min-height: 4px;
     background: @color10;
 }
 
-#pulseaudio-slider.muted highlight {
+window#waybar.modern #pulseaudio-slider.muted highlight {
     background-color: @color1;
 }
