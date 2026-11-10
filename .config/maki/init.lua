@@ -1,5 +1,6 @@
-require("librarian.init")
-require("codex")
+local librarian = require("librarian.init")
+librarian.register_extension("codex_search")
+maki.pack.add({ "https://github.com/dkarvik/maki-codex.git" })
 require("modes")
 require("thinking")
 require("librarian-git.init")
