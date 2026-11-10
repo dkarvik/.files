@@ -95,27 +95,13 @@
     "claude-md-management@claude-plugins-official": true,
     "github@claude-plugins-official": true,
     "context-mode@claude-context-mode": false,
-    "clojure-lsp@claude-code-lsps": true,
-    "caveman@caveman": false,
-    "ponytail@ponytail": true
+    "clojure-lsp@claude-code-lsps": true
   },
   "extraKnownMarketplaces": {
     "claude-code-lsps": {
       "source": {
         "source": "github",
         "repo": "boostvolt/claude-code-lsps"
-      }
-    },
-    "caveman": {
-      "source": {
-        "source": "github",
-        "repo": "JuliusBrussee/caveman"
-      }
-    },
-    "ponytail": {
-      "source": {
-        "source": "github",
-        "repo": "DietrichGebert/ponytail"
       }
     }
   },
