@@ -1,3 +1,3 @@
 #!/bin/sh
 
-which rot8 || exit 111
+command -v rot8 >/dev/null 2>&1 || exit 111
