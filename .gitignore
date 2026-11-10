@@ -125,7 +125,6 @@ supervise
 .gradle
 .android
 .amp
-.agents
 .antidote
 .babashka
 .claw
@@ -152,3 +151,6 @@ supervise
 .pulse-cookie
 .steampath
 .steampid
+.rustup
+.agents/skills/synced/
+.config/1Password/
