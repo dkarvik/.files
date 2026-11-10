@@ -1,6 +1,6 @@
 local librarian = require("librarian.init")
 librarian.register_extension("codex_search")
-maki.pack.add({ "https://github.com/dkarvik/maki-codex.git" })
+maki.pack.add({ "https://github.com/dkarvik/maki-codex.git", "https://github.com/dkarvik/maki-mistral.git" })
 require("modes")
 require("thinking")
 require("librarian-git.init")
