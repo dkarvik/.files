@@ -17,7 +17,7 @@ maki.setup({
     notifications = "notify",
   },
   provider = {
-      excluded_models = { "claude/*-4-*", "claude/*-sonnet-4", "claude/*-opus-5", "claude/*-sonnet-5", "claude/*-1m", "claude/claude-fable-5", "claude/claude-fable-5-1" },
+      excluded_models = { "claude/*-4-*", "claude/*-sonnet-4", "claude/*-opus-5", "claude/*-sonnet-5", "claude/*-1m", "claude/claude-fable-5", "claude/claude-fable-5-1", "openai/gpt-4*", "openai/gpt-5*", "openai/o*" },
   },
 })
 
