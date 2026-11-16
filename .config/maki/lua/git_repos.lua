@@ -1,3 +1,5 @@
+local ToolView = require("maki.tool_view")
+
 local script = [=[
 set -euo pipefail
 umask 077
@@ -11,20 +13,24 @@ repo="$root/repos/$host/$owner/$name"
 trees="$root/trees/$host/$owner/$name"
 base="$root/git_cache/$host/$owner/$name"
 mkdir -p "$base" "$(dirname "$repo")" "$trees"
+progress() { printf 'git-cache-progress: %s\n' "$1" >&2; }
+progress 'Waiting for repository lock'
 exec 9>"$base/lock"
 flock -w 300 9 || { echo 'timed out waiting for repository lock' >&2; exit 1; }
 tmp=''
-cleanup() { if [ -n "$tmp" ]; then rm -rf -- "$tmp"; fi; }
+cleanup() { if [ -n "$tmp" ]; then progress 'Cleaning up temporary files'; rm -rf -- "$tmp"; fi; }
 trap cleanup EXIT
 trap 'exit 124' TERM INT
 export GIT_TERMINAL_PROMPT=0 GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null
 export GIT_ATTR_NOSYSTEM=1
 url="https://$host/$owner/$name.git"
 if [ ! -e "$repo" ] && [ ! -L "$repo" ]; then
+  progress 'Cloning repository mirror'
   tmp=$(mktemp -d "$(dirname "$repo")/.git-cache-clone.XXXXXXXX")
   git clone --quiet --mirror -- "$url" "$tmp/repo.git"
   mv -T -n -- "$tmp/repo.git" "$repo"
   if [ -e "$tmp/repo.git" ]; then echo 'repository cache appeared during clone; retry' >&2; exit 1; fi
+  progress 'Cleaning up clone temporary files'
   rm -rf -- "$tmp"
   tmp=''
 fi
@@ -46,6 +52,7 @@ if [ -f "$base/refreshed" ] && [ -f "$base/default" ]; then
   IFS= read -r last < "$base/refreshed" || true
 fi
 if [[ ! "$last" =~ ^[0-9]{1,12}$ ]] || (( now < last || now - last >= ttl )); then
+  progress 'Refreshing remote HEAD and fetching branches and tags'
   rm -f -- "$base/refreshed"
   observed=$(date +%s)
   head_info=$(git -C "$repo" ls-remote --symref origin HEAD)
@@ -54,6 +61,7 @@ if [[ ! "$last" =~ ^[0-9]{1,12}$ ]] || (( now < last || now - last >= ttl )); th
   if [[ ! "$head_oid" =~ ^([0-9a-f]{40}|[0-9a-f]{64})$ ]]; then
     echo 'could not determine remote HEAD' >&2; exit 1
   fi
+  progress 'Fetching branches and tags'
   git -C "$repo" fetch --quiet --atomic --prune --no-tags origin "+refs/heads/*:$branches/*" '+refs/tags/*:refs/tags/*'
   if [ -n "$head_ref" ]; then
     case "$head_ref" in refs/heads/*) ;; *) echo 'remote HEAD is not a branch' >&2; exit 1 ;; esac
@@ -69,6 +77,7 @@ if [[ ! "$last" =~ ^[0-9]{1,12}$ ]] || (( now < last || now - last >= ttl )); th
   printf '%s\n' "$observed" > "$base/refreshed.tmp"
   mv -f -- "$base/refreshed.tmp" "$base/refreshed"
 fi
+progress 'Resolving revision'
 IFS= read -r default < "$base/default"
 if [ "$bare" = true ]; then
   if [[ "$default" == refs/heads/* ]]; then
@@ -120,10 +129,12 @@ if ! valid_snapshot "$snapshot" "$marker"; then
       echo 'invalid safe snapshot; preserving it' >&2; exit 1
     fi
   else
+    progress 'Creating safe snapshot'
     tmp=$(mktemp -d "$snapshots/.git-cache-tree.XXXXXXXX")
     mkdir -- "$tmp/tree"
     GIT_INDEX_FILE="$tmp/index" git -C "$repo" read-tree "$commit"
     GIT_INDEX_FILE="$tmp/index" git -C "$repo" --work-tree="$tmp/tree" checkout-index --all --force
+    progress 'Cleaning snapshot symlinks and temporary index'
     find -P "$tmp/tree" -type l -delete
     rm -f -- "$tmp/index" "$tmp/index.lock"
     printf '%s\n' "$commit" > "$tmp/complete"
@@ -132,6 +143,7 @@ if ! valid_snapshot "$snapshot" "$marker"; then
     tmp=''
   fi
 fi
+progress 'Cache ready'
 printf '%s\n%s\n%s\n' "$repo" "$snapshot" "$commit"
 ]=]
 
@@ -168,7 +180,22 @@ maki.api.register_tool({
     },
     required = { "repository" },
   },
-  handler = function(input)
+  header = function(input)
+    local repository = type(input.repository) == "string" and input.repository or "repository"
+    local host = type(input.host) == "string" and input.host or "github.com"
+    local ref = type(input.ref) == "string" and input.ref or "HEAD"
+    local buf = maki.ui.buf()
+    buf:line({
+      { (host .. "/" .. repository):gsub("[%c]", "?"):sub(1, 320), "tool" },
+      { " @ " .. ref:gsub("[%c]", "?"):sub(1, 255), "dim" },
+    })
+    return buf
+  end,
+  restore = function(_input, output, _is_error, _ctx)
+    local state = _ctx:state()
+    return ToolView.restore(state and state.progress or output, { max_lines = 3, keep = "tail", max_expand_lines = 200 })
+  end,
+  handler = function(input, ctx)
     local repository = input.repository
     if type(repository) ~= "string" or #repository > 255 then return failure("repository must be owner/repository") end
     local owner, name = repository:match("^([%w_][%w_.%-]*)/([%w_][%w_.%-]*)$")
@@ -189,20 +216,52 @@ maki.api.register_tool({
     local state = maki.env.state_dir()
     if not state then return failure("could not determine Maki state directory") end
     local root = maki.fs.joinpath(state, "librarian")
-    local id, start_err = maki.fn.jobstart({ "timeout", "--kill-after=10s", "510s", "bash", "-c", script, "git_cache", root, host, owner, name, ref or "", tostring(ttl) }, { scope = "task", tail = 100, max_line_bytes = 4096 })
-    if not id then return failure("could not start cache process: " .. tostring(start_err)) end
+    local buf = maki.ui.buf()
+    local view = ToolView.new(buf, { max_lines = 3, keep = "tail", max_expand_lines = 200 })
+    buf:on("click", function() view:toggle() end)
+    ctx:live_buf(buf)
+    local errors = ""
+    local progress_lines = {}
+    local function show(text_value)
+      for line in (text_value .. "\n"):gmatch("(.-)\n") do
+        progress_lines[#progress_lines + 1] = line
+        if #progress_lines > 200 then table.remove(progress_lines, 1) end
+        view:append(line)
+      end
+    end
+    local function finish(reply)
+      show(reply.llm_output)
+      view:finish()
+      reply.body = buf
+      reply.state = { progress = table.concat(progress_lines, "\n") }
+      return reply
+    end
+    local id, start_err = maki.fn.jobstart({ "timeout", "--kill-after=10s", "510s", "bash", "-c", script, "git_cache", root, host, owner, name, ref or "", tostring(ttl) }, {
+      scope = "task", tail = 100, max_line_bytes = 4096,
+      on_stderr = function(_, line)
+        local progress = line:match("^git%-cache%-progress: (.*)$")
+        if progress then
+          show(progress)
+        else
+          if #errors < 8192 then
+            errors = (errors .. (errors == "" and "" or "\n") .. line):sub(1, 8192)
+          end
+        end
+      end,
+    })
+    if not id then return finish(failure("could not start cache process: " .. tostring(start_err))) end
     local result, wait_err = maki.fn.jobwait(id, 540000)
     if not result then
       maki.fn.jobstop(id)
-      return failure("cache process failed or timed out: " .. tostring(wait_err))
+      return finish(failure("cache process failed or timed out: " .. tostring(wait_err)))
     end
     if result.exit_code ~= 0 then
-      local detail = text(result.stderr)
+      local detail = errors
       if detail == "" then detail = text(result.stdout) end
-      return failure("cache process failed (exit " .. tostring(result.exit_code) .. "): " .. detail:sub(1, 8192))
+      return finish(failure("cache process failed (exit " .. tostring(result.exit_code) .. "): " .. detail:sub(1, 8192)))
     end
     local repo, snapshot, commit = text(result.stdout):match("^([^\n]+)\n([^\n]+)\n([0-9a-f]+)%s*$")
-    if not repo or (#commit ~= 40 and #commit ~= 64) then return failure("cache process returned invalid output") end
-    return { llm_output = "clone_path: " .. repo .. "\nsnapshot_path: " .. snapshot .. "\ncommit: " .. commit }
+    if not repo or (#commit ~= 40 and #commit ~= 64) then return finish(failure("cache process returned invalid output")) end
+    return finish({ llm_output = "clone_path: " .. repo .. "\nsnapshot_path: " .. snapshot .. "\ncommit: " .. commit })
   end,
 })
